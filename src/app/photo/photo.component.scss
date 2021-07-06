@@ -9,10 +9,10 @@
     }
     .image {
         // z-index: -1;
-        // position: fixed;
-        // left: 50%;
-        // top: 50%;
-        // transform: translate(-50%, -50%);
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -46%);
     }
     .canvas {
         display: none;

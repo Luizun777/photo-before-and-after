@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, OnDestroy } fr
 import { Subscription } from 'rxjs';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import html2canvas from 'html2canvas';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-photo',
@@ -27,20 +28,30 @@ export class PhotoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('screen', ) screen: any;
 
+  cameraIndex: number = 0;
   captures: string[] = [];
   listCarama: any[] = [];
+  cameraId: string = '';
   error: any;
   isCaptured: boolean = false;
+  isCam: boolean = false;
   imagen: any;
-  opacity: number = 100;
+  opacity: number = 75;
 
   constructor(
-    public breakpointObserver: BreakpointObserver
+    public breakpointObserver: BreakpointObserver,
+    private router: ActivatedRoute,
+    private route: Router
   ) { }
 
   ngOnInit(): void {
-    // this.minWidth();
-    // this.minHeigth();
+    this.routerInit();
+  }
+
+  routerInit() : void {
+    this.router.params.subscribe((param: any) => {
+      this.cameraIndex = Number(param['cam']);
+    });
   }
 
   ngOnDestroy(): void {
@@ -67,14 +78,15 @@ export class PhotoComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async setupDevices() {
-    const groupId = '';
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       try {
+        const selectedCamera = this.listCarama.find((c) => c.label.includes('back')) || this.listCarama[0];
+        console.log(selectedCamera);
         const select = this.listCarama.find((camera: any) => camera.check);
-        
+        console.log(this.listCarama[this.cameraIndex].deviceId);
         const videoConstraints = {
           video: true,
-          deviceId: { exact: select.deviceId}
+          deviceId: { exact: selectedCamera.deviceId}
         };
         const stream = await navigator.mediaDevices.getUserMedia({
           video: videoConstraints
@@ -113,7 +125,7 @@ export class PhotoComponent implements OnInit, AfterViewInit, OnDestroy {
   drawImageToCanvas(image: any) {
     this.canvas.nativeElement
       .getContext("2d")
-      .drawImage(image, 0, 0, 350, 500);
+      .drawImage(image, 0, 0, 350, 466);
   }
 
   escucharWidth() {
@@ -160,6 +172,27 @@ export class PhotoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.minHeigthList.push(`(min-height: ${i}rem)`);
     }
     this.escucharHeigth();
+  }
+
+  changeCamera() {
+    const actualy = this.listCarama.find((camera: any) => camera.check);
+    const index = this.listCarama.indexOf(actualy);
+    this.listCarama.forEach((camara: any, i: number) => {
+      camara.check = i !== index;
+    });
+    this.route.navigate(['/camera', this.cameraIndex === 0 ? 1 : 0]);
+    // window.location.reload();
+    const select = this.listCarama.find((camera: any) => camera.check);
+    const videoConstraints = {
+      video: true,
+      deviceId: { exact: select.deviceId}
+    };
+    this.video.nativeElement.removeCurrent();
+    navigator.mediaDevices.getUserMedia({video: videoConstraints}).then((stream) => {
+      console.log(stream);
+      this.video.nativeElement.srcObject = stream;
+      this.video.nativeElement.play();
+    });
   }
 
 }

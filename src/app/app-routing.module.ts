@@ -5,7 +5,7 @@ import { PhotoComponent } from './photo/photo.component';
 
 const routes: Routes = [
   {
-    path:'camera',
+    path:'camera/:cam',
     component: PhotoComponent
   },
   {
