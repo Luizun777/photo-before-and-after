@@ -1,0 +1,23 @@
+<div class="video-container" [ngStyle]="{'width': WIDTH+'px', 'height': '500px'}">
+    <video class="video" #video [width]="350" [height]="500" autoplay></video>
+    <!-- <img class="image" [src]="imagen" *ngIf="isCaptured" width="600" height="480"> -->
+    <div class="image" [ngStyle]="{'opacity': opacity === 100 ? opacity : '0.'+opacity}">
+        <canvas #canvas id="canvas" [width]="350" [height]="500"></canvas>
+    </div>
+    <!-- <button (click)="removeCurrent()">Take Another</button> -->
+    <div class="opacidad" *ngIf="isCaptured">
+        <mat-slider vertical min="0" max="100" (change)="updateSetting($event)" [value]="opacity"></mat-slider>
+    </div>
+
+    <div class="capturar">
+        <button mat-fab (click)="capture()">
+            <mat-icon>radio_button_unchecked</mat-icon>
+        </button>
+    </div>
+
+    <div class="capturar-change">
+        <button mat-fab>
+            <mat-icon>cached</mat-icon>
+        </button>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+.video-container {
+    margin: 0 auto;
+    .video {
+        z-index: -1;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .image {
+        // z-index: -1;
+        // position: fixed;
+        // left: 50%;
+        // top: 50%;
+        // transform: translate(-50%, -50%);
+    }
+    .canvas {
+        display: none;
+    }
+    .opacidad {
+        position: fixed;
+        margin-top: auto;
+        margin-bottom: auto;
+        right: 0;
+        top: 5rem;
+        bottom: 0;
+    }
+    .capturar {
+        position: absolute;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
+        text-align: center;
+        bottom: 1rem;
+    }
+    .capturar-change {
+        position: absolute;
+        right: 1rem;
+        text-align: center;
+        bottom: 1rem;
+    }
+}
+.capturar-change {
+    ::ng-deep .mat-fab {
+        background-color: #00000099;
+        color: #ffffff;
+    }
+}
+.capturar {
+    ::ng-deep .mat-fab {
+        background-color: #ffffff7d;
+        color: #00000099;
+    }
+}
