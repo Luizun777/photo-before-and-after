@@ -2,11 +2,20 @@
     <video class="video" #video [width]="350" [height]="500" autoplay></video>
     <!-- <img class="image" [src]="imagen" *ngIf="isCaptured" width="600" height="480"> -->
     <div class="image" [ngStyle]="{'opacity': opacity === 100 ? opacity : '0.'+opacity}">
-        <canvas #canvas id="canvas" [width]="350" [height]="500"></canvas>
+        <canvas #canvas id="canvas" [width]="350" [height]="500" hidden></canvas>
+        <img class="imagen" *ngIf="imagen" [src]="imagen">
+        <img *ngIf="imagenUpload" [src]="imagenUpload" [width]="imagenW" [height]="imagenH">
     </div>
     <!-- <button (click)="removeCurrent()">Take Another</button> -->
+    <div class="opacidad-h" *ngIf="imagenUpload">
+        <mat-slider vertical min="0" max="1000" (change)="updateH($event)" [value]="imagenH" thumbLabel [displayWith]="formatLabelHeidth"></mat-slider>
+    </div>
+    <div class="opacidad-w" *ngIf="imagenUpload">
+        <mat-slider min="0" max="1000" (change)="updateW($event)" [value]="imagenW" thumbLabel [displayWith]="formatLabelWidth"></mat-slider>
+    </div>
+
     <div class="opacidad" *ngIf="isCaptured">
-        <mat-slider vertical min="0" max="100" (change)="updateSetting($event)" [value]="opacity"></mat-slider>
+        <mat-slider vertical min="0" max="100" (change)="updateOpacity($event)" [value]="opacity" thumbLabel></mat-slider>
     </div>
 
     <div class="capturar">
@@ -15,9 +24,21 @@
         </button>
     </div>
 
-    <!-- <div class="capturar-change">
-        <button mat-fab (click)="changeCamera()">
-            <mat-icon>cached</mat-icon>
+    <div class="capturar-change">
+        <!-- <button mat-fab (click)="changeCamera()">
+            <mat-icon>insert_photo</mat-icon>
+        </button> -->
+        <!-- <button mat-fab (click)="fileInput.click()">
+            <mat-icon>insert_photo</mat-icon>
+            <input #fileInput type="file" (change)="onFileInput($event)" style="display:none;" />
+        </button> -->
+        <button mat-fab (click)="descargarImage()" [matBadge]="capturesLength" [matBadgeHidden]="badgeHidden" *ngIf="capturesLength > 0">
+            <mat-icon>download</mat-icon>
         </button>
-    </div> -->
+    </div>
+    <div class="delete">
+        <button mat-fab (click)="reset()" *ngIf="capturesLength > 0">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
 </div>

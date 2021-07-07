@@ -36,7 +36,12 @@ export class PhotoComponent implements OnInit, AfterViewInit, OnDestroy {
   isCaptured: boolean = false;
   isCam: boolean = false;
   imagen: any;
-  opacity: number = 75;
+  imagenUpload: any;
+  imagenW: any;
+  imagenH: any;
+  opacity: number = 65;
+  badgeHidden: boolean = true;
+  capturesLength: number = 0;
 
   constructor(
     public breakpointObserver: BreakpointObserver,
@@ -59,9 +64,16 @@ export class PhotoComponent implements OnInit, AfterViewInit, OnDestroy {
     this.minHeigthSub.unsubscribe();
   }
 
-  updateSetting(event: any) {
-    console.log(event);
+  updateOpacity(event: any) {
     this.opacity = event.value;
+  }
+
+  updateW(event: any): void {
+    this.imagenW = event.value
+  }
+
+  updateH(event: any): void {
+    this.imagenH = event.value
   }
 
   async ngAfterViewInit() {
@@ -81,9 +93,6 @@ export class PhotoComponent implements OnInit, AfterViewInit, OnDestroy {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       try {
         const selectedCamera = this.listCarama.find((c) => c.label.includes('back')) || this.listCarama[0];
-        console.log(selectedCamera);
-        const select = this.listCarama.find((camera: any) => camera.check);
-        console.log(this.listCarama[this.cameraIndex].deviceId);
         const videoConstraints = {
           video: true,
           deviceId: { exact: selectedCamera.deviceId}
@@ -107,7 +116,12 @@ export class PhotoComponent implements OnInit, AfterViewInit, OnDestroy {
   capture() {
     this.drawImageToCanvas(this.video.nativeElement);
     this.captures.push(this.canvas.nativeElement.toDataURL("image/png"));
-    this.imagen = this.canvas.nativeElement.toDataURL("image/png")
+    this.imagen = this.canvas.nativeElement.toDataURL("image/png");
+    if (this.captures.length > 0) {
+      this.badgeHidden = false;
+      this.capturesLength = this.captures.length;
+    }
+
     this.isCaptured = true;
   }
 
@@ -125,7 +139,7 @@ export class PhotoComponent implements OnInit, AfterViewInit, OnDestroy {
   drawImageToCanvas(image: any) {
     this.canvas.nativeElement
       .getContext("2d")
-      .drawImage(image, 0, 0, 350, 466);
+      .drawImage(image, 0, 0, 350, 500);
   }
 
   escucharWidth() {
@@ -193,6 +207,57 @@ export class PhotoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.video.nativeElement.srcObject = stream;
       this.video.nativeElement.play();
     });
+  }
+
+  onFileInput(event: any) {
+    const reader = new FileReader();
+
+    reader.onload = (event: any) => {
+      const img: any = new Image();
+      img.onload = () => {
+        console.log(img.width);
+        console.log(img.height);
+        this.imagenW = img.width;
+        this.imagenH = img.height;
+      };
+      this.imagenUpload = event.target.result;
+      img.src = reader.result
+    };
+
+    reader.onerror = (event: any) => {
+      console.log("File could not be read: " + event.target.error.code);
+    };
+
+    if (event.target.files[0]) {
+      reader.readAsDataURL(event.target.files[0]);
+    }
+    this.isCaptured = true;
+  }
+
+  formatLabelWidth(): any {
+    return 'W';
+  }
+
+  formatLabelHeidth(): any {
+    return 'H';
+  }
+
+  descargarImage(): void {
+    for (const image of this.captures) {
+      const a = document.createElement("a"); //Create <a>
+      a.href = image;
+      a.download = "Image.png"; //File name Here
+      a.click(); //Downloaded file
+    }
+    this.reset();
+  }
+
+  reset(): void {
+    this.imagen = null;
+    this.captures = [];
+    this.capturesLength = this.captures.length;
+    this.badgeHidden = true;
+    this.isCaptured = false;
   }
 
 }

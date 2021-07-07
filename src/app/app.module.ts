@@ -9,8 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { PagesComponent } from './pages/pages.component';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatMenuModule } from '@angular/material/menu';
-
 
 @NgModule({
   declarations: [
@@ -25,6 +25,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MatIconModule,
     MatMenuModule,
     MatSliderModule,
+    MatBadgeModule,
     BrowserAnimationsModule
   ],
   providers: [],

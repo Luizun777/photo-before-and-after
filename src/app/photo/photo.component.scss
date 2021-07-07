@@ -1,6 +1,8 @@
 .video-container {
     margin: 0 auto;
     .video {
+        width: 351px;
+        height: 500px;
         z-index: -1;
         position: fixed;
         left: 50%;
@@ -25,6 +27,23 @@
         top: 5rem;
         bottom: 0;
     }
+    .opacidad-w {
+        position: fixed;
+        margin-top: auto;
+        margin-bottom: auto;
+        left: 0;
+        top: 1rem;
+        bottom: 0;
+    }
+    .opacidad-h {
+        z-index: 999;
+        position: fixed;
+        margin-top: auto;
+        margin-bottom: auto;
+        left: 2rem;
+        top: 5rem;
+        bottom: 0;
+    }
     .capturar {
         position: absolute;
         margin-left: auto;
@@ -40,6 +59,16 @@
         text-align: center;
         bottom: 1rem;
     }
+    .delete {
+        position: absolute;
+        left: 1rem;
+        text-align: center;
+        bottom: 1rem;
+        ::ng-deep .mat-fab {
+            background-color: #ff000099;
+            color: #ffffff;
+        }
+    }
 }
 .capturar-change {
     ::ng-deep .mat-fab {
@@ -52,4 +81,20 @@
         background-color: #ffffff7d;
         color: #00000099;
     }
+}
+
+canvas {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -47%);
+}
+
+.imagen {
+    width: 351px;
+    height: 469px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
