@@ -29,7 +29,7 @@ export class PhotoComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('screen', ) screen: any;
 
   cameraIndex: number = 0;
-  captures: string[] = [];
+  captures: any = [];
   listCarama: any[] = [];
   cameraId: string = '';
   error: any;
@@ -51,6 +51,18 @@ export class PhotoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.routerInit();
+    if (!localStorage.getItem('picure')) {
+      localStorage.setItem('picure', JSON.stringify([]))
+    } else {
+      const base: any = localStorage.getItem('picure');
+      this.captures = JSON.parse(base);
+      this.imagen = this.captures[this.captures.length - 1];
+      if (this.captures.length > 0) {
+        this.badgeHidden = false;
+        this.capturesLength = this.captures.length;
+        this.isCaptured = true;
+      }
+    }
   }
 
   routerInit() : void {
@@ -117,6 +129,7 @@ export class PhotoComponent implements OnInit, AfterViewInit, OnDestroy {
     this.drawImageToCanvas(this.video.nativeElement);
     this.captures.push(this.canvas.nativeElement.toDataURL("image/png"));
     this.imagen = this.canvas.nativeElement.toDataURL("image/png");
+    localStorage.setItem('picure', JSON.stringify(this.captures));
     if (this.captures.length > 0) {
       this.badgeHidden = false;
       this.capturesLength = this.captures.length;
@@ -243,13 +256,18 @@ export class PhotoComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   descargarImage(): void {
-    for (const image of this.captures) {
-      const a = document.createElement("a"); //Create <a>
-      a.href = image;
-      a.download = "Image.png"; //File name Here
-      a.click(); //Downloaded file
+    const a = document.createElement("a"); //Create <a>
+    a.href = this.captures[0];
+    a.download = "Image.png"; //File name Here
+    a.click(); //Downloaded file
+    this.captures = this.captures.filter((base: string) => base !== this.captures[0]);
+    localStorage.setItem('picure', JSON.stringify(this.captures));
+    this.capturesLength = this.captures.length;
+    if (this.capturesLength === 0) {
+      this.imagen = null;
+      this.isCaptured = false;
     }
-    this.reset();
+    // this.reset();
   }
 
   reset(): void {
@@ -258,6 +276,7 @@ export class PhotoComponent implements OnInit, AfterViewInit, OnDestroy {
     this.capturesLength = this.captures.length;
     this.badgeHidden = true;
     this.isCaptured = false;
+    localStorage.setItem('picure', JSON.stringify(this.captures));
   }
 
 }
